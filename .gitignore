@@ -1,0 +1,169 @@
+# =============================================================================
+# EBLASHARE PROJECT - GLOBAL GITIGNORE
+# =============================================================================
+# P2P file sync app | Java 17 | Gradle | JavaFX
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Project-specific artifacts
+# -----------------------------------------------------------------------------
+# Magic folder - user's shared files (DO NOT COMMIT)
+eblashare/
+
+# Application logs and temp files
+*.log
+logs/
+*.tmp
+*.temp
+~$*
+*.swp
+*.swo
+*~
+
+# APM reports (генерируются программой, не коммитим)
+*.html
+
+# Config с личными данными пользователя
+config.yml
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# -----------------------------------------------------------------------------
+# Gradle Build System
+# -----------------------------------------------------------------------------
+.gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Keep Gradle Wrapper (required for reproducible builds)
+!gradle/wrapper/gradle-wrapper.jar
+
+# Gradle cache and local properties (may contain secrets)
+.gradle/gradle.properties
+.gradle/caches/
+.gradle/daemon/
+.gradle/native/
+
+# -----------------------------------------------------------------------------
+# Java Compiled Files
+# -----------------------------------------------------------------------------
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# JVM crash logs
+hs_err_pid*
+replay_pid*
+
+# -----------------------------------------------------------------------------
+# JetBrains IDEs (IntelliJ, Android Studio, etc.)
+# -----------------------------------------------------------------------------
+# User-specific configuration
+.idea/
+
+# Compiled output
+out/
+*.iml
+*.iws
+*.ipr
+
+# Native builds
+.externalNativeBuild/
+cmake-build-*/
+
+# -----------------------------------------------------------------------------
+# IDE Misc / Other Editors
+# -----------------------------------------------------------------------------
+# Eclipse
+.classpath
+.project
+.settings/
+.bin/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+*.nb-gradle/
+
+# BlueJ / J2ME
+*.ctxt
+.mtj.tmp/
+
+# -----------------------------------------------------------------------------
+# Testing & Coverage
+# -----------------------------------------------------------------------------
+# JUnit / Test reports
+test-reports/
+coverage-reports/
+*.exec
+jacoco.exec
+
+# -----------------------------------------------------------------------------
+# Dependencies & Package Managers (if used)
+# -----------------------------------------------------------------------------
+# Maven (not used, but just in case)
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Node (if UI ever uses frontend tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# -----------------------------------------------------------------------------
+# Security & Secrets (NEVER COMMIT)
+# -----------------------------------------------------------------------------
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+*password*
+*secret*
+*.env
+*.env.local
+*.env.*.local
+
+# -----------------------------------------------------------------------------
+# Documentation & IDE Misc
+# -----------------------------------------------------------------------------
+# Javadoc
+javadoc/
+doc/
+
+# Editor backups
+*.bak
+*.old
+*.orig
+
+# =============================================================================
+# END OF GITIGNORE
+# =============================================================================
