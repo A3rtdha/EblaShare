@@ -21,6 +21,18 @@ public record Peer(
         metrics = metrics == null ? Map.of() : Map.copyOf(metrics);
     }
 
+    // Getters
+    public UUID getId() { return id; }
+    public String getName() { return name; }
+    public String getIp() { return ip; }
+    public long getLastSeen() { return lastSeen; }
+    public Object getMetrics() { return metrics; } // change it after implementing the metrics
+
+    // Setters
+    public void setLastSeen(long lastSeen) { this.lastSeen = lastSeen; }
+    public void setMetrics(Object metrics) { this.metrics = metrics; } // change it after implementing the metrics
+
+    // equals и hashCode only on id
     @Override
     public boolean equals(Object o) {
         if (this == o) {
