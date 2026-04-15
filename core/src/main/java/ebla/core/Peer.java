@@ -1,32 +1,29 @@
-package ebla;
+package ebla.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Peer {
 
-    @JsonProperty("id")
     private UUID id;
-
-    @JsonProperty("name")
     private String name;
-
-    @JsonProperty("ip")
     private String ip;
-
     private long lastSeen;
+    private Map<String, Object> metrics;
 
-    private Object metrics; // fill it out in MON-1
-
-    public Peer(UUID id, String name, String ip) {
+    @JsonCreator
+    public Peer(
+            @JsonProperty("id") UUID id,
+            @JsonProperty("name") String name,
+            @JsonProperty("ip") String ip) {
         this.id = id;
         this.name = name;
         this.ip = ip;
-        this.lastSeen = System.currentTimeMillis();
     }
 
     // Getters
@@ -34,11 +31,11 @@ public class Peer {
     public String getName() { return name; }
     public String getIp() { return ip; }
     public long getLastSeen() { return lastSeen; }
-    public Object getMetrics() { return metrics; } // change it after implementing the metrics
+    public Map<String, Object> getMetrics() { return metrics; }
 
     // Setters
     public void setLastSeen(long lastSeen) { this.lastSeen = lastSeen; }
-    public void setMetrics(Object metrics) { this.metrics = metrics; } // change it after implementing the metrics
+    public void setMetrics(Map<String, Object> metrics) { this.metrics = metrics; }
 
     // equals и hashCode only on id
     @Override
