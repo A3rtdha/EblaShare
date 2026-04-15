@@ -60,7 +60,7 @@
 | `CORE-1` | P0 | 1 | `DONE` | `Zaki` | Модель `Peer` | Оставить текущий `record` как базовую модель пира. | `Peer.java` хранит `id`, `name`, `ip`, `lastSeen`, `metrics`; `equals/hashCode` по `id`. |
 | `CORE-2` | P0 | 2 | `NEXT` | `Zaki` | `AppConfig` loader | Грузить `~/.eblashare/config.yml`, создать файл по умолчанию, уметь переопределять env-переменными Docker/runtime. | Есть `AppConfig`, загрузка не падает на отсутствии файла, дефолты создаются автоматически. |
 | `CORE-3` | P0 | 2 | `NEXT` | `Zaki` | Логирование | Подключить `slf4j` + `logback`, убрать `System.out` из bootstrap-логики по мере роста приложения. | Консольные и файловые логи работают, уровень задается из конфига/env. |
-| `CORE-4` | P0 | 3 | `NEXT` | `Aertdha` | `PeerRegistry` | Потокобезопасное хранилище пиров с TTL cleanup. | Можно add/update/get peers, "мертвые" пиры удаляются по таймеру. |
+| `CORE-4` | P0 | 3 | `DONE` | `Aertdha` | `PeerRegistry` | Потокобезопасное хранилище пиров с TTL cleanup. | Можно add/update/get peers, "мертвые" пиры удаляются по таймеру. |
 | `CORE-5` | P1 | 2 | `TODO` | `Zaki` | Discovery payload model | Зафиксировать модель UDP heartbeat: версия протокола, peer id, имя, ip, метрики. | Есть сериализуемая модель пакета и тест на round-trip JSON. |
 | `CORE-6` | P1 | 5 | `TODO` | `Aertdha` | UDP discovery service | Два потока: broadcast heartbeat и listener, связка с `PeerRegistry`. | Две локальные ноды видят друг друга и обновляют `lastSeen`. |
 
