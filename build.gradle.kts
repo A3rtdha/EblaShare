@@ -1,6 +1,31 @@
-dependencies {
-    implementation("com.github.oshi:oshi-core:6.6.0")
-    implementation("com.1stleg:jnativehook:2.2.2")
-    implementation("org.openjfx:javafx-controls:21")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.17")
+plugins {
+    java
+}
+
+tasks.wrapper {
+    gradleVersion = "8.10.2"
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+allprojects {
+    group = "ebla"
+    version = "0.1.0-SNAPSHOT"
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply(plugin = "java")
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
+    tasks.withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
+    }
 }

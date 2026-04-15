@@ -1,0 +1,9 @@
+# Базовая конфигурация Prometheus (раскомментируй сервис в docker-compose)
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "ebla-share"
+    static_configs:
+      - targets: ["ebla:9090"]  # JVM metrics endpoint (если добавишь Micrometer)

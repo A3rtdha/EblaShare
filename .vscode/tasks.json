@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Gradle: Build",
+      "type": "shell",
+      "command": "./gradlew :ui:jar --no-daemon",
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": "$gradle"
+    },
+    {
+      "label": "Gradle: Clean",
+      "type": "shell",
+      "command": "./gradlew clean --no-daemon",
+      "group": "build",
+      "presentation": { "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Up",
+      "type": "shell",
+      "command": "make up",
+      "group": "none",
+      "presentation": { "reveal": "always", "panel": "new" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Down",
+      "type": "shell",
+      "command": "make down",
+      "group": "none",
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Logs",
+      "type": "shell",
+      "command": "make logs",
+      "group": "none",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "new" },
+      "problemMatcher": []
+    }
+  ]
+}

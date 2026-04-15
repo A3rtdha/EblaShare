@@ -1,0 +1,89 @@
+# =============================================================================
+# EblaShare — .gitignore
+# Stack: Java 17 / Gradle (Kotlin DSL) / JavaFX
+# IDE:   Cursor (VS Code fork)
+# OS:    Windows + Linux + macOS
+# =============================================================================
+
+# ── Gradle ───────────────────────────────────────────────────────────────────
+.gradle/
+build/
+**/build/
+out/
+**/out/
+gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+.gradletasknamecache
+
+# ── Java ─────────────────────────────────────────────────────────────────────
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+# ── Cursor / VS Code ─────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.cursor/*
+!.cursor/rules/
+*.code-workspace
+.history/
+
+# ── IntelliJ IDEA (если вдруг) ───────────────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# ── Docker ───────────────────────────────────────────────────────────────────
+.dockerignore
+
+# ── Environment & secrets ────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+
+# ── OS: macOS ────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# ── OS: Windows ──────────────────────────────────────────────────────────────
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ── OS: Linux ────────────────────────────────────────────────────────────────
+*~
+.nfs*
+
+# ── Logs & temp ──────────────────────────────────────────────────────────────
+*.log
+*.tmp
+*.temp
+logs/
+tmp/
+temp/
+
+# ── EblaShare runtime artifacts ──────────────────────────────────────────────
+heatmap.html
+ebla-share-data/
+*.sha256
