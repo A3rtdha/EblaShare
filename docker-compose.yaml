@@ -1,0 +1,83 @@
+# =============================================================================
+# EblaShare — docker-compose.yaml
+# Использование:
+#   make up       — поднять всё
+#   make down     — остановить
+#   make logs     — посмотреть логи
+# =============================================================================
+
+services:
+
+  # ── Основной демон EblaShare ───────────────────────────────────────────────
+  ebla:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime           # можно переключить на builder для отладки
+    image: ebla-share:local
+    container_name: ebla-share
+
+    # Env-файл с реальными значениями (не коммитится)
+    env_file:
+      - .env
+
+    # Пробрасываем переменные из .env в контейнер
+    environment:
+      - EBLA_PEER_NAME=${EBLA_PEER_NAME:-DevBox}
+      - EBLA_DISCOVERY_PORT=${EBLA_DISCOVERY_PORT:-6969}
+      - EBLA_FILE_PORT=${EBLA_FILE_PORT:-6970}
+      - EBLA_SYNC_DIR=${EBLA_SYNC_DIR:-/data/ebla-share}
+      - EBLA_METRICS_INTERVAL_SEC=${EBLA_METRICS_INTERVAL_SEC:-5}
+      - EBLA_APM_ENABLED=false         # в контейнере всегда off
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - JAVA_TOOL_OPTIONS=-Djava.awt.headless=true
+
+    ports:
+      - "${EBLA_DISCOVERY_PORT:-6969}:6969/udp"   # peer discovery
+      - "${EBLA_FILE_PORT:-6970}:6970/tcp"         # file transfer
+
+    volumes:
+      # Папка синхронизации — монтируем с хоста
+      - ebla-data:/data/ebla-share
+      # Логи
+      - ./logs:/app/logs
+
+    networks:
+      - ebla-net
+
+    restart: unless-stopped
+
+    # Ресурсные лимиты (не падаем на слабой машине)
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+        reservations:
+          memory: 128M
+
+  # ── Опциональный: Prometheus для метрик (раскомментируй если нужно) ────────
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: ebla-prometheus
+  #   volumes:
+  #     - ./infra/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #   ports:
+  #     - "9090:9090"
+  #   networks:
+  #     - ebla-net
+  #   depends_on:
+  #     - ebla
+
+volumes:
+  ebla-data:
+    driver: local
+
+networks:
+  ebla-net:
+    driver: bridge
+    # Для работы UDP broadcast нужен host или macvlan.
+    # Для локальной разработки bridge достаточен.
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "EblaShare (TrayApp)",
+      "request": "launch",
+      "mainClass": "ebla.ui.TrayApp",
+      "projectName": "ui",
+      "vmArgs": "-Djava.awt.headless=false -Xmx512m",
+      "env": {
+        "EBLA_PEER_NAME": "DevLocal",
+        "EBLA_DISCOVERY_PORT": "6969",
+        "EBLA_FILE_PORT": "6970",
+        "EBLA_SYNC_DIR": "${workspaceFolder}/tmp/sync",
+        "EBLA_APM_ENABLED": "true",
+        "LOG_LEVEL": "DEBUG"
+      }
+    },
+    {
+      "type": "java",
+      "name": "EblaShare (Headless / Docker-like)",
+      "request": "launch",
+      "mainClass": "ebla.ui.TrayApp",
+      "projectName": "ui",
+      "vmArgs": "-Djava.awt.headless=true -Xmx256m",
+      "env": {
+        "EBLA_PEER_NAME": "HeadlessNode",
+        "EBLA_DISCOVERY_PORT": "6969",
+        "EBLA_FILE_PORT": "6970",
+        "EBLA_SYNC_DIR": "${workspaceFolder}/tmp/sync",
+        "EBLA_APM_ENABLED": "false",
+        "LOG_LEVEL": "DEBUG"
+      }
+    }
+  ]
+}
