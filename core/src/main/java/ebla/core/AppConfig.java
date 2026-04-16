@@ -1,20 +1,22 @@
 package ebla.core;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class AppConfig {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
-
-    private static final Path CONFIG_PATH =
-        Path.of(System.getProperty("user.home"), ".eblashare", "config.yml");
+    private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory())
+        .registerModule(new JavaTimeModule());
 
     // Поля конфига с дефолтными значениями
     private String username = "Anonymous";
@@ -22,54 +24,25 @@ public class AppConfig {
     private int udpPort = 6969;
     private int tcpPort = 6970;
 
-    private AppConfig() {}
-
-    // Singleton
-    private static class Holder {
-        static final AppConfig INSTANCE = load();
-    }
-    public static AppConfig getInstance() {
-        return Holder.INSTANCE;
-    }
-
-    // Загрузка конфига из файла + env overrides
-    private static AppConfig load() {
+    // Загрузка конфига из файла
+    public static AppConfig load(Path configPath) {
         AppConfig config;
 
-        if (Files.exists(CONFIG_PATH)) {
+        if (Files.exists(configPath)) {
             try {
-                config = MAPPER.readValue(CONFIG_PATH.toFile(), AppConfig.class);
+                config = MAPPER.readValue(configPath.toFile(), AppConfig.class);
             } catch (IOException e) {
-                // TODO(CORE-3): заменить на slf4j после подключения logback
-                System.err.println("Не удалось прочитать конфиг, используем дефолтный: " + e.getMessage());
-                config = new AppConfig();
+                throw new UncheckedIOException("Конфиг повреждён, исправь файл: " + configPath, e);
             }
         } else {
             config = new AppConfig();
             try {
-                config.save();
+                config.save(configPath);
             } catch (IOException e) {
+                // TODO(CORE-3): заменить на slf4j после подключения logback
                 System.err.println("Не удалось сохранить дефолтный конфиг: " + e.getMessage());
             }
         }
-
-        return applyEnvOverrides(config);
-    }
-
-    // Переопределение полей через переменные окружения (для Docker/runtime).
-    // Внимание: если после этого вызвать save(), env-значения запишутся в файл.
-    private static AppConfig applyEnvOverrides(AppConfig config) {
-        String envUser = System.getenv("EBLA_USERNAME");
-        if (envUser != null && !envUser.isBlank()) config.setUsername(envUser);
-
-        String envFolder = System.getenv("EBLA_SYNC_FOLDER");
-        if (envFolder != null && !envFolder.isBlank()) config.setSyncFolder(envFolder);
-
-        String envUdp = System.getenv("EBLA_UDP_PORT");
-        if (envUdp != null) config.setUdpPort(parsePort(envUdp, "EBLA_UDP_PORT", config.getUdpPort()));
-
-        String envTcp = System.getenv("EBLA_TCP_PORT");
-        if (envTcp != null) config.setTcpPort(parsePort(envTcp, "EBLA_TCP_PORT", config.getTcpPort()));
 
         return config;
     }
@@ -84,25 +57,34 @@ public class AppConfig {
             }
             return port;
         } catch (NumberFormatException e) {
+            // TODO(CORE-3): заменить на slf4j после подключения logback
             System.err.println("Некорректное значение " + envName + ": " + value);
             return fallback;
         }
     }
 
-    /**
-     * Сохраняет текущее состояние конфига на диск.
-     * Внимание: если были применены env-оверрайды, они тоже запишутся в файл.
-     */
-    public void save() throws IOException {
-        Files.createDirectories(CONFIG_PATH.getParent());
-        MAPPER.writeValue(CONFIG_PATH.toFile(), this);
+    public void save(Path configPath) throws IOException {
+        Files.createDirectories(configPath.getParent());
+        MAPPER.writeValue(configPath.toFile(), this);
     }
 
     // Геттеры
-    public String getUsername() { return username; }
-    public String getSyncFolder() { return syncFolder; }
-    public int getUdpPort() { return udpPort; }
-    public int getTcpPort() { return tcpPort; }
+    public String getUsername() {
+        String envUser = System.getenv("EBLA_USERNAME");
+        return envUser != null && !envUser.isBlank() ? envUser : this.username;
+    }
+    public String getSyncFolder() {
+        String envFolder = System.getenv("EBLA_SYNC_FOLDER");
+        return envFolder != null && !envFolder.isBlank() ? envFolder : this.syncFolder;
+    }
+    public int getUdpPort() {
+        String envUdp = System.getenv("EBLA_UDP_PORT");
+        return envUdp != null && !envUdp.isBlank() ? AppConfig.parsePort(envUdp, "EBLA_UDP_PORT", this.udpPort) : this.udpPort;
+    }
+    public int getTcpPort() {
+        String envTcp = System.getenv("EBLA_TCP_PORT");
+        return envTcp != null && !envTcp.isBlank() ? AppConfig.parsePort(envTcp, "EBLA_TCP_PORT", this.tcpPort) : this.tcpPort;
+    }
 
     // Сеттеры
     public void setUsername(String username) { this.username = username; }
